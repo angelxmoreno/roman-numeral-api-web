@@ -1,0 +1,12 @@
+---
+application:
+  name: "roman-numeral-api-web"
+  project: "roman-numeral-api"
+  organization: "QoveryCommunity"
+  publicly_accessible: true
+routers:
+- name: "main-roman-numeral-api-web"
+  routes:
+  - application_name: "roman-numeral-api-web"
+    paths:
+    - "/*"
