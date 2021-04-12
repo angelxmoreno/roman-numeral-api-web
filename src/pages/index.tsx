@@ -1,67 +1,66 @@
 import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
-        <title>Create Next App</title>
+        <title>Roman Numeral Api</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{` `}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <p className={styles.description}>This is not an official starter!</p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=typescript-nextjs-starter"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
+      <main role="main">
+        <div className="jumbotron">
+          <div className="container">
+            <h1 className="display-3">Roman Numeral API</h1>
             <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
+              Welcome to RomanNumeralApi.com, an API service for converting
+              numbers to and from Roman Numeral.
             </p>
-          </a>
+            <p>
+              <Link href="/">
+                <a className="btn btn-primary btn-lg" role="button">
+                  Learn more »
+                </a>
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        <div className="container">
+          <div className="row">
+            <div className="col-md-4">
+              <h2>Free</h2>
+              <p>The API service is free to use.{` `}</p>
+              <p>
+                <a className="btn btn-secondary" href="/" role="button">
+                  View details »
+                </a>
+              </p>
+            </div>
+            <div className="col-md-4">
+              <h2>Direct Access</h2>
+              <p>You do not need to register to try out the API service{` `}</p>
+              <p>
+                <a className="btn btn-secondary" href="/" role="button">
+                  View details »
+                </a>
+              </p>
+            </div>
+            <div className="col-md-4">
+              <h2>Open Source</h2>
+              <p>
+                All the code for the API Service is licensed with MIT and can be
+                found in our GitHub repositories.
+              </p>
+              <p>
+                <a className="btn btn-secondary" href="/" role="button">
+                  View details »
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=typescript-nextjs-starter"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{` `}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
   );
 }
