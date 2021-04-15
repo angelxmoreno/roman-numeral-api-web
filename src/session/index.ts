@@ -1,50 +1,41 @@
-import { UserEntity } from '@/types';
-import { NextApiRequest } from 'next';
+import { applySession, session } from 'next-session';
+import nextConnect from 'next-connect';
 import {
-  applySession,
-  Handler,
-  Session,
-  SessionOptions,
-  withIronSession,
-} from 'next-iron-session';
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from 'next';
+import { Options, Session } from 'next-session/dist/types';
+import { UserEntity } from '@/types';
 
-export interface AppSessionData {
-  user: UserEntity | null;
-  jwt: string | null;
+export type AuthProps = { user: UserEntity; jwt: string; isLoggedIn: boolean };
+
+interface RequestWithSession extends NextApiRequest {
+  session: Session & AuthProps;
 }
 
-export interface NextApiRequestWithSession extends NextApiRequest {
-  session: AppSessionData & Session;
-}
+export type HandlerWithSession = (
+  req: RequestWithSession,
+  res: NextApiResponse,
+) => any;
 
-const secret = process.env.SESSION_KEY as string;
-export const sessionOptions: SessionOptions = {
-  password: secret,
-  cookieName: `sid`,
-  cookieOptions: {
+const options: Options = {
+  name: `sess_id`,
+  cookie: {
     secure: false,
     httpOnly: false,
   },
 };
+export const appSession = session(options);
+export const appSessionHandler = nextConnect<
+  RequestWithSession,
+  NextApiResponse
+>().use(appSession);
 
-export const sessionAware = (handler: Handler) =>
-  withIronSession(handler, sessionOptions);
-
-export interface AuthProps extends AppSessionData {
-  isLoggedIn: boolean;
-}
-
-export const getAuth = async (context: {
-  req: unknown;
-  res: unknown;
-}): Promise<AuthProps> => {
-  await applySession(context.req, context.res, sessionOptions);
-  const { req } = (context as unknown) as { req: NextApiRequestWithSession };
-  const user: UserEntity | null = req.session.get(`user`) || null;
-  const jwt: string | null = req.session.get(`jwt`) || null;
-  return {
-    user,
-    jwt,
-    isLoggedIn: !!user,
-  };
+export const getSessionRequestByContext = async (
+  context: GetServerSidePropsContext,
+) => {
+  const { req, res } = context;
+  await applySession(req, res, options);
+  return req as RequestWithSession;
 };

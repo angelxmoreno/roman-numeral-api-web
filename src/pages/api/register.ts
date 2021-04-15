@@ -1,18 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { RegisterPayload, RegisterResponse, UserEntity } from '@/types';
+import { RegisterPayload, RegisterResponse } from '@/types';
 import client from '@/utils/beClient';
-import { NextApiRequestWithSession } from '@/session';
-import nc from 'next-connect';
-
-const saveUserSession = async (
-  req: NextApiRequestWithSession,
-  user: UserEntity,
-  jwt: string,
-) => {
-  req.session.set(`user`, user);
-  req.session.set(`jwt`, jwt);
-  await req.session.save();
-};
+import { appSessionHandler, HandlerWithSession } from '@/session';
 
 const callRemote = async (
   payload: RegisterPayload,
@@ -24,16 +12,18 @@ const callRemote = async (
   return data;
 };
 
-const route = async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+const route: HandlerWithSession = async (req, res) => {
   const payload = req.body as RegisterPayload;
   const registerResponse = await callRemote(payload);
   const { isValid, user, jwt } = registerResponse;
   if (isValid && user && jwt) {
-    await saveUserSession(req, user, jwt);
+    req.session.user = user;
+    req.session.jwt = jwt;
+    req.session.isLoggedIn = true;
   }
   res.statusCode = 200;
   res.json(registerResponse);
 };
-const handler = nc<NextApiRequestWithSession, NextApiResponse>().post(route);
+const handler = appSessionHandler.post(route);
 
 export default handler;
