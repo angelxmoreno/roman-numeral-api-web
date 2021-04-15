@@ -1,7 +1,8 @@
-import { NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { RegisterPayload, RegisterResponse, UserEntity } from '@/types';
 import client from '@/utils/beClient';
-import { NextApiRequestWithSession, sessionAware } from '@/session';
+import { NextApiRequestWithSession } from '@/session';
+import nc from 'next-connect';
 
 const saveUserSession = async (
   req: NextApiRequestWithSession,
@@ -12,6 +13,7 @@ const saveUserSession = async (
   req.session.set(`jwt`, jwt);
   await req.session.save();
 };
+
 const callRemote = async (
   payload: RegisterPayload,
 ): Promise<RegisterResponse> => {
@@ -22,10 +24,7 @@ const callRemote = async (
   return data;
 };
 
-const registerRoute = async (
-  req: NextApiRequestWithSession,
-  res: NextApiResponse,
-) => {
+const route = async (req: NextApiRequestWithSession, res: NextApiResponse) => {
   const payload = req.body as RegisterPayload;
   const registerResponse = await callRemote(payload);
   const { isValid, user, jwt } = registerResponse;
@@ -35,5 +34,6 @@ const registerRoute = async (
   res.statusCode = 200;
   res.json(registerResponse);
 };
+const handler = nc<NextApiRequestWithSession, NextApiResponse>().post(route);
 
-export default sessionAware(registerRoute);
+export default handler;
