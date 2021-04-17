@@ -1,13 +1,13 @@
 import { appSessionHandler, HandlerWithSession } from '@/session';
 import {
-  callRemoteRegister,
+  callRemoteLogIn,
+  LogInPayload,
   logInUserFromAuthResponse,
-  RegisterPayload,
 } from '@/client';
 
 const route: HandlerWithSession = async (req, res) => {
-  const payload = req.body as RegisterPayload;
-  const authFormResponse = await callRemoteRegister(payload);
+  const payload = req.body as LogInPayload;
+  const authFormResponse = await callRemoteLogIn(payload);
   logInUserFromAuthResponse(req, res, authFormResponse);
   res.statusCode = 200;
   res.json(authFormResponse);

@@ -8,9 +8,13 @@ import {
 import { Options, Session } from 'next-session/dist/types';
 import { UserEntity } from '@/types';
 
-export type AuthProps = { user: UserEntity; jwt: string; isLoggedIn: boolean };
+export type AuthProps = {
+  user: UserEntity | null;
+  jwt: string | null;
+  isLoggedIn: boolean;
+};
 
-interface RequestWithSession extends NextApiRequest {
+export interface RequestWithSession extends NextApiRequest {
   session: Session & AuthProps;
 }
 
@@ -20,6 +24,7 @@ export type HandlerWithSession = (
 ) => any;
 
 const options: Options = {
+  autoCommit: true,
   name: `sess_id`,
   cookie: {
     secure: false,
@@ -38,4 +43,12 @@ export const getSessionRequestByContext = async (
   const { req, res } = context;
   await applySession(req, res, options);
   return req as RequestWithSession;
+};
+
+export const getAuthPropsFromContext = async (
+  context: GetServerSidePropsContext,
+): Promise<AuthProps> => {
+  const reqWithSession = await getSessionRequestByContext(context);
+  const { user, jwt, isLoggedIn } = reqWithSession.session;
+  return { user: user || null, jwt: jwt || null, isLoggedIn: !!isLoggedIn };
 };

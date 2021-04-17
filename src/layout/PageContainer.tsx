@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import NavBarTop from './NavBarTop';
 
-const PageContainer: FC<unknown> = ({ children }) => (
+const PageContainer: FC = ({ children }) => (
   <>
     <NavBarTop />
     {children}

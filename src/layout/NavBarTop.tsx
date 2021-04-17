@@ -2,12 +2,15 @@ import React, { FC, useState } from 'react';
 import {
   Collapse,
   Container,
+  DropdownToggle,
   Nav,
   Navbar,
   NavbarBrand,
   NavbarToggler,
+  UncontrolledDropdown,
 } from 'reactstrap';
 import NavItemLink from '@/layout/NavItemLink';
+import MyAccountDropDown from '@/layout/MyAccountDropDown';
 
 const NavBarTop: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +27,14 @@ const NavBarTop: FC = () => {
             <NavItemLink to="/" label="Home" />
             <NavItemLink to="/about" label="About" />
             <NavItemLink to="/register" label="Register" />
-            <NavItemLink to="/login" label="Log In" />
+            <NavItemLink to="/logout" label="Log Out" />
+
+            <UncontrolledDropdown nav inNavbar>
+              <DropdownToggle nav caret>
+                My Account
+              </DropdownToggle>
+              <MyAccountDropDown />
+            </UncontrolledDropdown>
           </Nav>
         </Collapse>
       </Container>

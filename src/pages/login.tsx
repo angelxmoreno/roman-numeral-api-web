@@ -3,6 +3,7 @@ import { Container } from 'reactstrap';
 import { GetServerSideProps } from 'next';
 import { getSessionRequestByContext } from '@/session';
 import { FC } from 'react';
+import LogInForm from '@/forms/LogInForm';
 
 const LogIn: FC = () => (
   <div>
@@ -13,7 +14,7 @@ const LogIn: FC = () => (
     <Container>
       <h1>Log In Page</h1>
       <hr />
-      <p>This is the log In page</p>
+      <LogInForm />
     </Container>
   </div>
 );
@@ -30,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
       }
     : {
-        props: { isLoggedIn },
+        props: { isLoggedIn: !!isLoggedIn },
       };
 };
 

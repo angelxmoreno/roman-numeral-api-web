@@ -2,8 +2,8 @@ import Head from 'next/head';
 import { Container } from 'reactstrap';
 import RegisterForm from '@/forms/RegisterForm';
 import { GetServerSideProps } from 'next';
+import { AuthProps, getAuthPropsFromContext } from '@/session';
 import { FC } from 'react';
-import { AuthProps, getSessionRequestByContext } from '@/session';
 
 const Register: FC<AuthProps> = ({ user, isLoggedIn }) => (
   <div>
@@ -28,8 +28,7 @@ const Register: FC<AuthProps> = ({ user, isLoggedIn }) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const reqWithSession = await getSessionRequestByContext(context);
-  const { user, jwt, isLoggedIn } = reqWithSession.session;
+  const { user, jwt, isLoggedIn } = await getAuthPropsFromContext(context);
   return {
     props: { user, jwt, isLoggedIn },
   };

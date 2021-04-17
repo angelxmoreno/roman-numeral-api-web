@@ -2,50 +2,31 @@ import React, { FC } from 'react';
 import * as Yup from 'yup';
 import { FormikConfig, FormikHelpers } from 'formik/dist/types';
 import { Button, Form, Spinner } from 'reactstrap';
-import InputRow from '@/forms/InputRow';
 import { Formik } from 'formik';
 import axios from 'axios';
-import { AuthFormResponse } from '@/client';
+import { AuthFormResponse, LogInPayload } from '@/client';
 import { useRouter } from 'next/router';
+import InputRow from './InputRow';
 
-interface FormValues {
-  name: string;
-  email: string;
-  email2: string;
-  password: string;
-  password2: string;
-}
-
-const RegisterForm: FC = () => {
+const LogInForm: FC = () => {
   const router = useRouter();
 
-  const initialValues: FormValues = {
-    name: ``,
+  const initialValues: LogInPayload = {
     email: ``,
-    email2: ``,
     password: ``,
-    password2: ``,
   };
+
   const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(2, `Must be 2 characters or more`)
-      .required(`Required`),
     email: Yup.string().email(`Invalid email address`).required(`Required`),
     password: Yup.string().required(`Required`),
-    email2: Yup.string()
-      .required(`Required`)
-      .oneOf([Yup.ref(`email`), null], `Emails must match`),
-    password2: Yup.string()
-      .required(`Required`)
-      .oneOf([Yup.ref(`password`), null], `Passwords must match`),
   });
+
   const onSubmit = async (
-    values: FormValues,
-    actions: FormikHelpers<FormValues>,
+    values: LogInPayload,
+    actions: FormikHelpers<LogInPayload>,
   ) => {
-    const { name, email, password } = values;
-    const { data } = await axios.post<AuthFormResponse>(`/api/register`, {
-      name,
+    const { email, password } = values;
+    const { data } = await axios.post<AuthFormResponse>(`/api/login`, {
       email,
       password,
     });
@@ -59,7 +40,7 @@ const RegisterForm: FC = () => {
     }
     actions.setSubmitting(false);
   };
-  const formikProps: FormikConfig<FormValues> = {
+  const formikProps: FormikConfig<LogInPayload> = {
     validationSchema,
     initialValues,
     onSubmit,
@@ -69,27 +50,14 @@ const RegisterForm: FC = () => {
       {({ handleSubmit, isSubmitting }) => (
         <Form onSubmit={handleSubmit}>
           <InputRow
-            name="name"
-            label="Full Name"
-            placeholder="your name"
-            type="text"
-          />
-          <InputRow
             name="email"
             label="Email Address"
             placeholder="email address"
             type="email"
           />
-          <InputRow
-            name="email2"
-            label="Confirm Email"
-            placeholder="repeat email address"
-            type="email"
-          />
           <InputRow name="password" label="Password" type="password" />
-          <InputRow name="password2" label="Confirm Password" type="password" />
           <Button color="success" block type="submit" disabled={isSubmitting}>
-            Register {isSubmitting && <Spinner size="sm" />}
+            Log In {isSubmitting && <Spinner size="sm" />}
           </Button>
         </Form>
       )}
@@ -97,4 +65,4 @@ const RegisterForm: FC = () => {
   );
 };
 
-export default RegisterForm;
+export default LogInForm;
