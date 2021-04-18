@@ -2,11 +2,12 @@ import React, { FC } from 'react';
 import * as Yup from 'yup';
 import { FormikConfig, FormikHelpers } from 'formik/dist/types';
 import { Button, Form, Spinner } from 'reactstrap';
-import InputRow from '@/forms/InputRow';
+import InputRow from '@/forms/elements/InputRow';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { AuthFormResponse } from '@/client';
 import { useRouter } from 'next/router';
+import { useAlerts } from '@/alerts';
 
 interface FormValues {
   name: string;
@@ -18,6 +19,7 @@ interface FormValues {
 
 const RegisterForm: FC = () => {
   const router = useRouter();
+  const Alerts = useAlerts();
 
   const initialValues: FormValues = {
     name: ``,
@@ -55,6 +57,8 @@ const RegisterForm: FC = () => {
         actions.setFieldError(error.property, error.messages[0]);
       });
     } else {
+      Alerts.auth(`Successfully logged in`);
+
       await router.push(`/`);
     }
     actions.setSubmitting(false);

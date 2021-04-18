@@ -27,8 +27,6 @@ const NavBarTop: FC = () => {
             <NavItemLink to="/" label="Home" />
             <NavItemLink to="/about" label="About" />
             <NavItemLink to="/register" label="Register" />
-            <NavItemLink to="/logout" label="Log Out" />
-
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 My Account

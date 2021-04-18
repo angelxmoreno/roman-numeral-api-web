@@ -1,9 +1,20 @@
 import { GetServerSideProps } from 'next';
 import { getSessionRequestByContext } from '@/session';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { logOutUser } from '@/client';
+import { useAlerts } from '@/alerts';
+import { useRouter } from 'next/router';
 
-const LogOut: FC = () => <div />;
+const LogOut: FC = () => {
+  const Alerts = useAlerts();
+  const router = useRouter();
+  useEffect(() => {
+    Alerts.auth(`Successfully logged out`);
+
+    router.push(`/login`);
+  }, []);
+  return <p>Logging out</p>;
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const reqWithSession = await getSessionRequestByContext(context);
@@ -12,12 +23,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (isLoggedIn) {
     logOutUser(reqWithSession, context.res);
   }
-  return {
-    redirect: {
-      permanent: true,
-      destination: `/login`,
-    },
-  };
+  return { props: {} };
 };
 
 export default LogOut;

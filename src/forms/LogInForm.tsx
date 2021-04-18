@@ -6,11 +6,12 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { AuthFormResponse, LogInPayload } from '@/client';
 import { useRouter } from 'next/router';
-import InputRow from './InputRow';
+import { useAlerts } from '@/alerts';
+import InputRow from './elements/InputRow';
 
 const LogInForm: FC = () => {
   const router = useRouter();
-
+  const Alerts = useAlerts();
   const initialValues: LogInPayload = {
     email: ``,
     password: ``,
@@ -32,10 +33,12 @@ const LogInForm: FC = () => {
     });
     const { isValid, errors } = data;
     if (!isValid && errors) {
+      Alerts.error(`Could not log you in.`);
       errors.forEach((error) => {
         actions.setFieldError(error.property, error.messages[0]);
       });
     } else {
+      Alerts.auth(`Successfully logged in`);
       await router.push(`/`);
     }
     actions.setSubmitting(false);

@@ -19,13 +19,16 @@ const MyAccountDropDown: FC = () => {
       )}
 
       {isAuthenticated && (
-        <Link href="/logout">
-          <DropdownItem>Log Out</DropdownItem>
-        </Link>
+        <>
+          <Link href="/logout">
+            <DropdownItem>Log Out</DropdownItem>
+          </Link>
+          <DropdownItem divider />
+          <Link href="/">
+            <DropdownItem>Settings</DropdownItem>
+          </Link>
+        </>
       )}
-
-      <DropdownItem divider />
-      <DropdownItem>Reset</DropdownItem>
     </DropdownMenu>
   );
 };
