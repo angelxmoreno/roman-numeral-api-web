@@ -13,7 +13,6 @@ const SelectRow: FC<Props> = ({ name, data, label }) => {
   const inputProps = {
     id: `${name}field`,
     name,
-    type: `select`,
   };
   const [field, meta] = useField(inputProps);
   const invalid = meta.touched && !!meta.error;
@@ -24,7 +23,7 @@ const SelectRow: FC<Props> = ({ name, data, label }) => {
         {labelText}
       </Label>
       <Col sm={10}>
-        <Input {...field} {...inputProps} invalid={invalid}>
+        <Input type="select" {...field} {...inputProps} invalid={invalid}>
           {data.map((datum) => (
             <option key={datum}>{datum}</option>
           ))}
